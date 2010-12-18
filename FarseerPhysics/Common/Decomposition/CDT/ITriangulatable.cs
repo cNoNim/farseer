@@ -29,32 +29,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+using System.Collections.Generic;
+using Poly2Tri.Triangulation.Delaunay;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+namespace Poly2Tri.Triangulation
 {
-    public class AdvancingFrontNode
+    public interface Triangulatable
     {
-        public AdvancingFrontNode Next;
-        public PolygonPoint Point;
-        public AdvancingFrontNode Prev;
-        public DelaunayTriangle Triangle;
-        public double Value;
+        void PrepareTriangulation(TriangulationContext tcx);
 
-        public AdvancingFrontNode(PolygonPoint point)
-        {
-            Point = point;
-            Value = point.X;
-        }
+        IList<TriangulationPoint> Points { get; } // MM: Neither of these are used via interface (yet?)
+        IList<DelaunayTriangle> Triangles { get; }
 
-        public bool HasNext
-        {
-            get { return Next != null; }
-        }
+        void AddTriangle(DelaunayTriangle t);
+        void AddTriangles(IEnumerable<DelaunayTriangle> list);
+        void ClearTriangles();
 
-        public bool HasPrev
-        {
-            get { return Prev != null; }
-        }
+        TriangulationMode TriangulationMode { get; }
     }
 }

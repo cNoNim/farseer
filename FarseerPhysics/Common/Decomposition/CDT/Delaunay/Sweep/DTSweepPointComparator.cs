@@ -30,42 +30,36 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Poly2Tri.Triangulation;
-using Poly2Tri.Triangulation.Delaunay;
-using Poly2Tri.Triangulation.Delaunay.Sweep;
-using Poly2Tri.Triangulation.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition
+namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
-    public static class CDTDecomposer
+    public class DTSweepPointComparator : IComparer<TriangulationPoint>
     {
-        public static List<Vertices> ConvexPartition(Vertices vertices)
+        public int Compare(TriangulationPoint p1, TriangulationPoint p2)
         {
-            Polygon poly = new Polygon();
-
-            foreach (Vector2 vertex in vertices)
+            if (p1.Y < p2.Y)
             {
-                poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
+                return -1;
             }
-
-            DTSweepContext tcx = new DTSweepContext();
-            tcx.PrepareTriangulation(poly);
-            DTSweep.Triangulate(tcx);
-            
-            List<Vertices> results = new List<Vertices>();
-
-            foreach (DelaunayTriangle triangle in poly.Triangles)
+            else if (p1.Y > p2.Y)
             {
-                Vertices v = new Vertices();
-                foreach (TriangulationPoint p in triangle.Points)
+                return 1;
+            }
+            else
+            {
+                if (p1.X < p2.X)
                 {
-                    v.Add(new Vector2((float)p.X, (float)p.Y));
+                    return -1;
                 }
-                results.Add(v);
+                else if (p1.X > p2.X)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
-
-            return results;
         }
     }
 }

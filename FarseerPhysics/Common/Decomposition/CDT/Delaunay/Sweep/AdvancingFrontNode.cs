@@ -29,42 +29,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+// Changes from the Java version
+//   Removed getters
+//   Has* turned into attributes
+// Future possibilities
+//   Comments!
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
-    public class DTSweepPointComparator : IComparer<PolygonPoint>
+    public class AdvancingFrontNode
     {
-        #region IComparer<PolygonPoint> Members
+        public AdvancingFrontNode Next;
+        public AdvancingFrontNode Prev;
+        public double Value;
+        public TriangulationPoint Point;
+        public DelaunayTriangle Triangle;
 
-        public int Compare(PolygonPoint p1, PolygonPoint p2)
+        public AdvancingFrontNode(TriangulationPoint point)
         {
-            if (p1.Y < p2.Y)
-            {
-                return -1;
-            }
-            else if (p1.Y > p2.Y)
-            {
-                return 1;
-            }
-            else
-            {
-                if (p1.X < p2.X)
-                {
-                    return -1;
-                }
-                else if (p1.X > p2.X)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
+            this.Point = point;
+            Value = point.X;
         }
 
-        #endregion
+        public bool HasNext { get { return Next != null; } }
+        public bool HasPrev { get { return Prev != null; } }
     }
 }

@@ -29,14 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+namespace Poly2Tri.Triangulation
 {
-    public class DTSweepBasin
+    public enum TriangulationMode
     {
-        public AdvancingFrontNode BottomNode;
-        public bool LeftHighest;
-        public AdvancingFrontNode LeftNode;
-        public AdvancingFrontNode RightNode;
-        public double Width;
+        Unconstrained, Constrained, Polygon
     }
 }

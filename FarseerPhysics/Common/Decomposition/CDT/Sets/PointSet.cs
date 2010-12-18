@@ -30,42 +30,48 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Poly2Tri.Triangulation;
 using Poly2Tri.Triangulation.Delaunay;
-using Poly2Tri.Triangulation.Delaunay.Sweep;
-using Poly2Tri.Triangulation.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition
+namespace Poly2Tri.Triangulation.Sets
 {
-    public static class CDTDecomposer
+    public class PointSet : Triangulatable
     {
-        public static List<Vertices> ConvexPartition(Vertices vertices)
+        public IList<TriangulationPoint> Points { get; private set; }
+        public IList<DelaunayTriangle> Triangles { get; private set; }
+
+        public PointSet(List<TriangulationPoint> points)
         {
-            Polygon poly = new Polygon();
+            Points = new List<TriangulationPoint>(points);
+        }
 
-            foreach (Vector2 vertex in vertices)
+        public virtual TriangulationMode TriangulationMode { get { return TriangulationMode.Unconstrained; } }
+
+        public void AddTriangle(DelaunayTriangle t)
+        {
+            Triangles.Add(t);
+        }
+
+        public void AddTriangles(IEnumerable<DelaunayTriangle> list)
+        {
+            foreach (DelaunayTriangle tri in list) Triangles.Add(tri);
+        }
+
+        public void ClearTriangles()
+        {
+            Triangles.Clear();
+        }
+
+        public virtual void PrepareTriangulation(TriangulationContext tcx)
+        {
+            if (Triangles == null)
             {
-                poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
+                Triangles = new List<DelaunayTriangle>(Points.Count);
             }
-
-            DTSweepContext tcx = new DTSweepContext();
-            tcx.PrepareTriangulation(poly);
-            DTSweep.Triangulate(tcx);
-            
-            List<Vertices> results = new List<Vertices>();
-
-            foreach (DelaunayTriangle triangle in poly.Triangles)
+            else
             {
-                Vertices v = new Vertices();
-                foreach (TriangulationPoint p in triangle.Points)
-                {
-                    v.Add(new Vector2((float)p.X, (float)p.Y));
-                }
-                results.Add(v);
+                Triangles.Clear();
             }
-
-            return results;
+            tcx.Points.AddRange(Points);
         }
     }
 }

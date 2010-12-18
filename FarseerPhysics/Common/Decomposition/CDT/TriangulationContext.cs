@@ -29,13 +29,58 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Poly2Tri.Triangulation.Delaunay;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+namespace Poly2Tri.Triangulation
 {
-    public class DTSweepConstraint
+    public abstract class TriangulationContext
     {
-        public PolygonPoint P;
-        public PolygonPoint Q;
+        public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
+
+        public readonly List<TriangulationPoint> Points = new List<TriangulationPoint>(200);
+        public TriangulationMode TriangulationMode { get; protected set; }
+        public Triangulatable Triangulatable { get; private set; }
+
+        public bool WaitUntilNotified { get; private set; }
+        public bool Terminated { get; set; }
+
+        private int _stepTime = -1;
+
+        public TriangulationContext()
+        {
+            Terminated = false;
+        }
+
+        public int StepCount { get; private set; }
+
+        public void Done()
+        {
+            StepCount++;
+        }
+
+        public virtual void PrepareTriangulation(Triangulatable t)
+        {
+            Triangulatable = t;
+            TriangulationMode = t.TriangulationMode;
+            t.PrepareTriangulation(this);
+        }
+
+        public abstract TriangulationConstraint NewConstraint(TriangulationPoint a, TriangulationPoint b);
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void Update(string message)
+        {
+        }
+
+        public virtual void Clear()
+        {
+            Points.Clear();
+            Terminated = false;
+            StepCount = 0;
+        }
+
+        public virtual bool IsDebugEnabled { get; protected set; }
     }
 }

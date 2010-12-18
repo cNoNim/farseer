@@ -29,21 +29,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+// Changes from the Java version
+//   Replaced getPolygons with attribute
+// Future possibilities
+//   Replace Add(Polygon) with exposed container?
+//   Replace entire class with HashSet<Polygon> ?
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+using System.Collections.Generic;
+
+namespace Poly2Tri.Triangulation.Polygon
 {
-    public class PointOnEdgeException : NotImplementedException
+    public class PolygonSet
     {
-        public readonly PolygonPoint A, B, C;
+        protected List<Polygon> _polygons = new List<Polygon>();
 
-        public PointOnEdgeException(string message, PolygonPoint a, PolygonPoint b, PolygonPoint c)
-            : base(message)
+        public PolygonSet() { }
+
+        public PolygonSet(Polygon poly)
         {
-            A = a;
-            B = b;
-            C = c;
+            _polygons.Add(poly);
         }
+
+        public void Add(Polygon p)
+        {
+            _polygons.Add(p);
+        }
+
+        public IEnumerable<Polygon> Polygons { get { return _polygons; } }
     }
 }

@@ -29,43 +29,38 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Poly2Tri.Triangulation;
-using Poly2Tri.Triangulation.Delaunay;
-using Poly2Tri.Triangulation.Delaunay.Sweep;
-using Poly2Tri.Triangulation.Polygon;
-
-namespace FarseerPhysics.Common.Decomposition
+namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
-    public static class CDTDecomposer
+    public class DTSweepConstraint : TriangulationConstraint
     {
-        public static List<Vertices> ConvexPartition(Vertices vertices)
+        /// <summary>
+        /// Give two points in any order. Will always be ordered so
+        /// that q.y > p.y and q.x > p.x if same y value 
+        /// </summary>
+        public DTSweepConstraint(TriangulationPoint p1, TriangulationPoint p2)
         {
-            Polygon poly = new Polygon();
-
-            foreach (Vector2 vertex in vertices)
+            P = p1;
+            Q = p2;
+            if (p1.Y > p2.Y)
             {
-                poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
+                Q = p1;
+                P = p2;
             }
-
-            DTSweepContext tcx = new DTSweepContext();
-            tcx.PrepareTriangulation(poly);
-            DTSweep.Triangulate(tcx);
-            
-            List<Vertices> results = new List<Vertices>();
-
-            foreach (DelaunayTriangle triangle in poly.Triangles)
+            else if (p1.Y == p2.Y)
             {
-                Vertices v = new Vertices();
-                foreach (TriangulationPoint p in triangle.Points)
+                if (p1.X > p2.X)
                 {
-                    v.Add(new Vector2((float)p.X, (float)p.Y));
+                    Q = p1;
+                    P = p2;
                 }
-                results.Add(v);
+                else if (p1.X == p2.X)
+                {
+                    //                logger.info( "Failed to create constraint {}={}", p1, p2 );
+                    //                throw new DuplicatePointException( p1 + "=" + p2 );
+                    //                return;
+                }
             }
-
-            return results;
+            Q.AddEdge(this);
         }
     }
 }
