@@ -3,6 +3,8 @@ layout: default
 title: What is Farseer Physics Engine?
 ---
 
+![](images/logo.png)
+
 # What is Farseer Physics Engine?
 
 Farseer Physics Engine is a collision detection system with realistic physics responses. This means you can create a game or robotic simulation easily using the engine and the associated tools. Everything from a simple hobby game to a complex robotic simulation is possible with Farseer Physics Engine.
