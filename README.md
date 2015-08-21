@@ -2,6 +2,8 @@
 
 This is fork of core sources from svn. History was saved from version 3.0 and was rewritten for better change tracking. Fork doesn't include samples, tests and some other stuffs. Project files for [Protobuild](http://protobuild.org/) will be added later.
 
+![](https://cnonim.github.io/farseer/images/logo.png)
+
 # What is Farseer Physics Engine?
 
 Farseer Physics Engine is a collision detection system with realistic physics responses. This means you can create a game or robotic simulation easily using the engine and the associated tools. Everything from a simple hobby game to a complex robotic simulation is possible with Farseer Physics Engine.
